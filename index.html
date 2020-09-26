@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <title>Presentation HTML</title>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      * {
+        margin: 0px;
+      }
+      body {
+        width: 98vw;
+        height: auto;
+      }
+      .container {
+        width: 80%;
+        height: 90vh;
+        margin: auto;
+      }
+      .slide {
+        background-color: rgb(152, 219, 208);
+        width: 100%;
+        height: 100vh;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+      .navigateButton {
+        position: fixed;
+      }
+      #prevButton {
+        top: 20px;
+        left: 20px;
+      }
+      #nextButton {
+        top: 20px;
+        right: 20px;
+      }
+
+      .page-count {
+        position: fixed;
+        top: 50px;
+        left: 20px;
+      }
+      .total-slide-count {
+      }
+      .current-slide-id {
+      }
+      .draggable{
+          display: inline-block;
+          cursor: default
+      }
+    </style>
+  </head>
+  <body>
+    <button id="prevButton" class="navigateButton">prev</button>
+    <button id="nextButton" class="navigateButton">next</button>
+    <div class="page-count">
+      <span class="current-slide-id">0</span>/<span class="total-slide-count"
+        >0</span
+      >
+    </div>
+    <div class="container">
+      <div class="slide" data-slide_id="0">
+        slid 0 content
+      </div>
+      <div class="slide" data-slide_id="1">
+        slid 1 content
+        <div class="draggable">please drag me</div>
+        <h1 class="draggable">MFDFA and EMD</h1>
+      </div>
+      <div class="slide" data-slide_id="2">
+        slid 2 content
+      </div>
+      <div class="slide" data-slide_id="3">
+        slid 3 content
+      </div>
+      <div id="slide4" class="slide" data-slide_id="4">
+        slid 4 content
+      </div>
+    </div>
+
+    <script>
+      const prevButton = document.getElementById("prevButton");
+      const nextButton = document.getElementById("nextButton");
+      const slidesArray = Array.from(
+        document.querySelectorAll("[data-slide_id]")
+      );
+      const nSlides = slidesArray.length;
+
+      const currentSlideIdDOM = document.querySelector(".current-slide-id");
+      const totalSlideCountDOM = document.querySelector(".total-slide-count");
+
+      // initialization
+      totalSlideCountDOM.innerHTML = nSlides - 1;
+      const globalState = {
+        currentlyViewingSlide: 0
+      };
+
+      slidesArray.forEach((slide, index) => {
+        slide.id = `slide${index}`;
+      });
+
+      nextButton.addEventListener("click", e => {
+        goToNextSlide();
+      });
+
+      prevButton.addEventListener("click", e => {
+        goToPrevSlide();
+      });
+
+      window.addEventListener("keydown", e => {
+        console.log(e.key);
+        if (e.key === "ArrowLeft") goToPrevSlide();
+        if (e.key === "ArrowRight") goToNextSlide();
+      });
+
+      const goToNextSlide = () => {
+        currentSlideId = globalState.currentlyViewingSlide;
+        if (currentSlideId < nSlides - 1) {
+          globalState.currentlyViewingSlide += 1;
+        }
+        simulateAnchorclick(globalState.currentlyViewingSlide);
+        currentSlideIdDOM.innerHTML = globalState.currentlyViewingSlide;
+      };
+
+      const goToPrevSlide = () => {
+        currentSlideId = globalState.currentlyViewingSlide;
+        if (currentSlideId > 0) {
+          globalState.currentlyViewingSlide -= 1;
+        }
+        simulateAnchorclick(globalState.currentlyViewingSlide);
+        currentSlideIdDOM.innerHTML = globalState.currentlyViewingSlide;
+      };
+
+      const simulateAnchorclick = gotoId => {
+        const a = document.createElement("a");
+        a.href = `./index.html#slide${gotoId}`;
+        a.click();
+      };
+    </script>
+
+    <script>
+      $(function() {
+        $(".draggable").draggable();
+      });
+    </script>
+  </body>
+</html>
